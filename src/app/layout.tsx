@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Sora } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import Navbar from "@/components/components/navbar";
+import { Footer } from "@/components/components/footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,12 +29,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${sora.className} ${poppins.variable} antialiased`}
       >
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}
+        <Navbar/>
+        <div className="flex flex-col min-h-screen">
+            <div className="flex-grow container mx-auto">
+              {children}
+            </div>
+        </div>
+        <Footer/>
       </ThemeProvider>
       </body>
     </html>
