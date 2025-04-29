@@ -9,8 +9,8 @@ import ToggleTheme from "@/components/ui/toggleTheme";
 export default function Home() {
   return (
     <>
-      {/* <ToggleTheme/> */}
-      <Hero />
+      <Hero/>
+      <ToggleTheme/>
       <SectionBorder />
       <Feature />
       <SectionImage sectionProps={sectionProps1} imagePosition={eImagePosition.RIGHT} />
