@@ -30,7 +30,7 @@ export default function AppLayout({ children, rightSidebarContent }: LayoutProps
                        sm:ml-16 md:ml-64 lg:ml-72 
                        lg:mr-100 p-4"
       >
-        <div className="max-w-2xl mx-auto">{children}</div>
+        <div className="max-w-2xl mx-auto pb-16 sm:pb-0">{children}</div>
       </main>
 
       {/* Right Sidebar - Fixed on large screens, hidden on smaller screens */}
