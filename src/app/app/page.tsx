@@ -1,9 +1,12 @@
+import AppLayout from "@/components/components/appLayout";
 import FeedContent from "@/components/components/feed-content";
+import HomeSidebar from "@/components/components/home-sidebar";
+// import ProfileSidebar from "@/components/components/profile-sidebar";
 
 export default function dashboard() {
     return (
-        <div className="pb-16 sm:pb-0">
+        <AppLayout rightSidebarContent={<HomeSidebar />}>
             <FeedContent />
-        </div>
+        </AppLayout>
     )
 }
