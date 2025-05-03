@@ -1,7 +1,9 @@
+import FeedContent from "@/components/components/feed-content";
+
 export default function dashboard() {
     return (
-        <div>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perferendis corrupti, quidem tempore dignissimos optio laboriosam impedit voluptatum unde ullam deleniti laudantium autem nulla cum cumque! Perferendis est voluptatum assumenda dolor?
+        <div className="pb-16 sm:pb-0">
+            <FeedContent />
         </div>
     )
 }

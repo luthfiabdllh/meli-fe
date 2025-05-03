@@ -112,6 +112,13 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
 
 
@@ -125,7 +132,6 @@
 }
 @layer components {
   
-
   .text-gradient {
     @apply bg-gradient-to-tl from-[#3A8EF6] to-[#6F3AFA] bg-clip-text text-transparent;
   }
@@ -134,3 +140,18 @@
   }
 }
 
+@layer utilities {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 100%;
+    /* max-: 1400px} */
+  }
+
+  .spacing-100 {
+    width: 25rem; /* 400px */
+    height: 25rem; /* 400px */
+  }
+}
