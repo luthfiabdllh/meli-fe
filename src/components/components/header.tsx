@@ -14,7 +14,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-white">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/" className="text-2xl font-bold text-blue-500">
+          <Link href="/app" className="text-2xl font-bold text-blue-500">
             MeLi
           </Link>
           <div className="relative hidden md:block w-[400px]">
@@ -30,7 +30,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <nav className="flex items-center gap-2">
             <Button variant="ghost" size="icon" asChild className="text-slate-600">
-              <Link href="/">
+              <Link href="/app">
                 <Home className="h-5 w-5" />
                 <span className="sr-only">Home</span>
               </Link>
