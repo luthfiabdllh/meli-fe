@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FcGoogle } from "react-icons/fc"
+import Image from "next/image"
 
 export function RegistrationForm({
   className,
@@ -10,7 +11,15 @@ export function RegistrationForm({
 }: React.ComponentProps<"form">) {
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
-      <p className="text-4xl font-semibold text-gradient text-center mb-5">MELI</p>
+      <div className="flex items-center justify-center mb-5 gap-3">
+        <Image
+          src="/logo.svg"
+          alt="Logo"
+          width={56}
+          height={56}
+        />
+        <p className="text-4xl font-semibold text-gradient text-center">MELI</p>
+      </div>
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold">Register</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -20,15 +29,15 @@ export function RegistrationForm({
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="name">Fullname</Label>
-          <Input id="name" type="text" required />
+          <Input id="name" type="text" placeholder="Enter your name" required />
         </div>
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="@mail.com" required />
+          <Input id="email" type="email" placeholder="Enter your email" required />
         </div>
         <div className="grid gap-3">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required />
+          <Input id="password" type="password" placeholder="Enter your password" required />
         </div>
         <Button type="submit" variant="gradient" className="w-full text-sm">
           Login

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FcGoogle } from "react-icons/fc"
 import Link from "next/link"
+import Image from "next/image"
 
 export function LoginForm({
   className,
@@ -11,8 +12,17 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
+      <div className="flex items-center justify-center mb-5 gap-3">
+        <Image
+          src="/logo.svg"
+          alt="Logo"
+          width={56}
+          height={56}
+        />
+        <p className="text-4xl font-semibold text-gradient text-center">MELI</p>
+      </div>
+      <div className="flex flex-col gap-2 ">
+        <h1 className="text-2xl font-bold">Login</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Enter your email below to login to your account
         </p>
@@ -20,7 +30,7 @@ export function LoginForm({
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input id="email" type="email" placeholder="Enter your email" required />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
@@ -32,7 +42,7 @@ export function LoginForm({
               Forgot your password?
             </Link>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" type="password" placeholder="Enter your password" required />
         </div>
         <Button type="submit" variant="gradient" className="w-full text-sm">
           Login
