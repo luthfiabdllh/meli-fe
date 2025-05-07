@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { ImageIcon, X, Video, Loader2 } from "lucide-react"
+import { ImageIcon, Video, Loader2 } from "lucide-react"
 import MediaPreviewSlider from "./mediaPreviewSlider"
 
 interface ReplyDialogProps {
@@ -80,9 +80,6 @@ export default function ReplyDialog({ open, onOpenChange, replyingTo, onSubmitRe
     setMediaFiles(newFiles)
     setMediaPreviews(newPreviews)
   }
-
-  const isImage = (file: File) => file.type.startsWith("image/")
-  const isVideo = (file: File) => file.type.startsWith("video/")
 
   return (
     <Dialog

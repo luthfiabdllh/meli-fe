@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { DialogTitle } from "@radix-ui/react-dialog"
+import Image from "next/image"
 
 interface ImageViewerProps {
   images: string[]
@@ -76,7 +77,9 @@ export default function ImageViewer({ images, initialIndex, open, onOpenChange }
 
           {/* Main image */}
           <div className="relative max-w-full max-h-[90vh] flex items-center justify-center">
-            <img
+            <Image
+              width={800}
+              height={800}
               src={images[currentIndex] || "/placeholder.svg"}
               alt={`Full size image ${currentIndex + 1}`}
               className="max-w-full max-h-[90vh] object-contain rounded-md"

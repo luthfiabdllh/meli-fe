@@ -1,7 +1,5 @@
-// app/(main)/layout.tsx
 "use client";
 
-import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/components/navbar";
 import { Footer } from "@/components/components/footer";
 

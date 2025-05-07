@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 
 export default function DefaultRightSidebar() {
   return (
@@ -31,7 +32,7 @@ export default function DefaultRightSidebar() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg overflow-hidden">
-            <img src="/placeholder.svg?height=200&width=300" alt="Article image" className="w-full h-44 object-cover" />
+            <Image width={800} height={800} src="/placeholder.svg?height=200&width=300" alt="Article image" className="w-full h-44 object-cover" />
           </div>
           <div>
             <p className="font-medium text-sm">@steve_rogers</p>

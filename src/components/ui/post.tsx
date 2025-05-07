@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Heart, MessageSquare, Share2, ChevronDown, ChevronUp } from "lucide-react"
+import Image from "next/image"
 
 interface ReplyType {
   id: string
@@ -43,7 +44,7 @@ interface PostProps {
   replies?: ReplyType[]
 }
 
-export default function Post({ id, user, content, engagement, timestamp, replies = [] }: PostProps) {
+export default function Post({user, content, engagement, timestamp, replies = [] }: PostProps) {
   const [showReplies, setShowReplies] = useState(false)
 
   return (
@@ -70,7 +71,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
         <p className="mb-3">{content.text}</p>
         {content.image && (
           <div className="rounded-md overflow-hidden">
-            <img src={content.image || "/placeholder.svg"} alt="Post image" className="w-full object-cover" />
+            <Image width={800} height={800} src={content.image || "/placeholder.svg"} alt="Post image" className="w-full object-cover" />
           </div>
         )}
         <p className="text-xs text-muted-foreground mt-2">{timestamp}</p>
@@ -120,7 +121,9 @@ export default function Post({ id, user, content, engagement, timestamp, replies
                     <p className="text-sm mt-1">{reply.content.text}</p>
                     {reply.content.image && (
                       <div className="rounded-md overflow-hidden mt-2">
-                        <img
+                        <Image
+                          width={800}
+                          height={800}
                           src={reply.content.image || "/placeholder.svg"}
                           alt="Reply image"
                           className="w-full object-cover"

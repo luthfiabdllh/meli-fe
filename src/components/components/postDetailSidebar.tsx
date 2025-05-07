@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { PostType } from "@/lib/data"
+import Image from "next/image"
 
 interface PostDetailSidebarProps {
   post: PostType
@@ -53,7 +54,9 @@ export default function PostDetailSidebar({ post }: PostDetailSidebarProps) {
                 <p className="text-xs text-muted-foreground mt-1">{Math.floor(Math.random() * 10) + 1} hours ago</p>
               </div>
               <div className="w-16 h-16 bg-slate-100 rounded-md overflow-hidden flex-shrink-0">
-                <img
+                <Image
+                  width={800}
+                  height={800}
                   src={`/placeholder.svg?height=64&width=64&text=${i}`}
                   alt={`Related post ${i}`}
                   className="h-full w-full object-cover"

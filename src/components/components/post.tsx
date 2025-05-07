@@ -15,8 +15,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "../../../hooks/use-toast"
 import ReplyDialog from "./replyDialog"
 import ImageViewer from "./imageViewer"
+import Image from "next/image"
 
-interface PostProps extends PostType {}
+type PostProps = PostType;
 
 export default function Post({ id, user, content, engagement, timestamp, replies = [] }: PostProps) {
   const [showReplies, setShowReplies] = useState(false)
@@ -127,7 +128,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
   }
 
   // Function to render media grid for replies
-  const renderReplyMediaGrid = (images?: string[], replyId?: string) => {
+  const renderReplyMediaGrid = (images?: string[]) => {
     if (!images || images.length === 0) return null
 
     return (
@@ -154,7 +155,9 @@ export default function Post({ id, user, content, engagement, timestamp, replies
               setImageViewerOpen(true)
             }}
           >
-            <img
+            <Image
+              width={800}
+              height={800}
               src={image || "/placeholder.svg"}
               alt={`Reply image ${index + 1}`}
               className={`w-full h-full object-cover ${
@@ -168,7 +171,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
   }
 
   // Function to render replies with proper nesting
-  const renderReplies = (replies: Reply[], level = 0, parentId?: string) => {
+  const renderReplies = (replies: Reply[], level = 0) => {
     // For the feed, only show first level replies and limit to 2
     if (level > 0 || replies.length === 0) return null
 
@@ -207,8 +210,8 @@ export default function Post({ id, user, content, engagement, timestamp, replies
                 <p className="text-sm mt-1">{reply.content.text}</p>
 
                 {/* Render media grid for reply */}
-                {reply.content.images && renderReplyMediaGrid(reply.content.images, reply.id)}
-                {reply.content.image && !reply.content.images && renderReplyMediaGrid([reply.content.image], reply.id)}
+                {reply.content.images && renderReplyMediaGrid(reply.content.images)}
+                {reply.content.image && !reply.content.images && renderReplyMediaGrid([reply.content.image])}
 
                 <div className="flex gap-4 mt-2">
                   <Button
@@ -293,7 +296,9 @@ export default function Post({ id, user, content, engagement, timestamp, replies
             }`}
             onClick={(e) => handleImageClick(index, e)}
           >
-            <img
+            <Image
+              width={800}
+              height={800}
               src={image || "/placeholder.svg"}
               alt={`Post image ${index + 1}`}
               className={`w-full h-full object-cover ${

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import Image from "next/image"
 
 interface MediaPreviewSliderProps {
   mediaPreviews: string[]
@@ -30,7 +31,9 @@ export default function MediaPreviewSlider({ mediaPreviews, mediaFiles, onRemove
     <div className="relative rounded-lg overflow-hidden bg-slate-50">
       <div className="aspect-video relative">
         {isImage(mediaFiles[currentIndex]) ? (
-          <img
+          <Image
+            width={800}
+            height={800}
             src={mediaPreviews[currentIndex] || "/placeholder.svg"}
             alt={`Preview ${currentIndex}`}
             className="w-full h-full object-contain"

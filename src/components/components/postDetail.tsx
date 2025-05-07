@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation"
 import { useToast } from "../../../hooks/use-toast"
 import ImageViewer from "./imageViewer"
 import ReplyDialog from "./replyDialog"
+import Image from "next/image"
 
 interface PostDetailProps {
   post: PostType
@@ -205,7 +206,9 @@ export default function PostDetail({ post }: PostDetailProps) {
             }`}
             onClick={() => handleImageClick(index)}
           >
-            <img
+            <Image
+              width={800}
+              height={800}
               src={image || "/placeholder.svg"}
               alt={`Post image ${index + 1}`}
               className={`w-full h-full object-cover ${
@@ -242,7 +245,9 @@ export default function PostDetail({ post }: PostDetailProps) {
             }`}
             onClick={() => handleReplyImageClick(replyId, index)}
           >
-            <img
+            <Image
+              width={800}
+              height={800}
               src={image || "/placeholder.svg"}
               alt={`Reply image ${index + 1}`}
               className={`w-full h-full object-cover ${

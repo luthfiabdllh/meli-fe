@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ImageIcon, FileText, Award } from "lucide-react"
+import Image from "next/image"
 
 export default function ProfileSidebar() {
   return (
@@ -36,7 +37,9 @@ export default function ProfileSidebar() {
                 key={i}
                 className="aspect-square rounded-md bg-slate-100 flex items-center justify-center overflow-hidden"
               >
-                <img
+                <Image
+                  width={800}
+                  height={800}
                   src={`/placeholder.svg?height=100&width=100&text=${i}`}
                   alt={`Photo ${i}`}
                   className="h-full w-full object-cover"
