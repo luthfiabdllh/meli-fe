@@ -12,15 +12,14 @@ export const metadata: Metadata = {
 
 interface PostPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
 export default function PostPage({ params }: PostPageProps) {
-  const { slug } = params
-  const posts = getPosts()
-  const post = posts.find((post) => post.id === slug)
-  
+  const { slug } = params;
+  const posts = getPosts();
+  const post = posts.find((post) => post.id === slug);
 
   if (!post) {
     return (
@@ -29,7 +28,7 @@ export default function PostPage({ params }: PostPageProps) {
           <p className="text-lg text-muted-foreground">Post not found</p>
         </div>
       </AppLayout>
-    )
+    );
   }
 
   return (
@@ -38,5 +37,6 @@ export default function PostPage({ params }: PostPageProps) {
         <PostDetail post={post} />
       </div>
     </AppLayout>
-  )
+  );
 }
+
