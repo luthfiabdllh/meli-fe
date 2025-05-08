@@ -59,14 +59,14 @@ const Navbar = ({
         <nav className="hidden justify-between lg:flex">
           <div className="flex items-center gap-18 bg-white/80 backdrop-blur rounded-full p-2 ">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-10">
+            <Link href={logo.url} className="flex items-center gap-10">
               <Image
-              src={logo.src} width={32} height={32} className="size-14" alt={logo.alt} 
+              src={logo.src} width={32} height={32} className=" size-14" alt={logo.alt} 
               />
               <span className="text-3xl font-semibold text-gradient">
                 {logo.title}
               </span>
-            </a>
+            </Link>
             <div className="flex items-center">
             <ul className="flex flex-1 list-none items-center justify-center gap-10">
                 {menu.map((item) => (
@@ -96,7 +96,7 @@ const Navbar = ({
             {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-4">
               <Image
-              src={logo.src} width={32} height={32} className="size-16" alt={logo.alt} 
+              src={logo.src} width={32} height={32} className="size-10" alt={logo.alt} 
               />
               <span className="text-3xl font-semibold text-gradient block lg:hidden">
           {logo.title}
