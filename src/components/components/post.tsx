@@ -15,7 +15,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "../../../hooks/use-toast"
 import ImageViewer from "./imageViewer"
 import ReplyDialog from "./replyDialog"
-import ImageViewer from "./imageViewer"
 
 interface PostProps extends PostType {}
 
