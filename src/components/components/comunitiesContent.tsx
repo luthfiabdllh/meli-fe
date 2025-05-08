@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search } from "lucide-react"
+import { Search, PlusCircle, Users, Info } from "lucide-react"
 import type { Community } from "@/lib/data"
 import CommunityCard from "./comunitiesCard"
 
@@ -34,9 +34,15 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Communities</h1>
-        <p className="text-muted-foreground">Discover and join communities based on your interests</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Communities</h1>
+          <p className="text-muted-foreground">Discover and join communities based on your interests</p>
+        </div>
+        <Button className="md:self-start">
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Create Community
+        </Button>
       </div>
 
       {/* Search and filter */}
@@ -105,11 +111,11 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCommunities.length > 0 ? (
               filteredCommunities.map((community) => <CommunityCard key={community.id} community={community} />)
             ) : (
-              <div className="col-span-2 py-8 text-center text-muted-foreground">
+              <div className="col-span-3 py-8 text-center text-muted-foreground">
                 <p>No communities found matching your criteria.</p>
               </div>
             )}
@@ -117,7 +123,7 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
         </TabsContent>
 
         <TabsContent value="popular" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCommunities
               .sort((a, b) => b.memberCount - a.memberCount)
               .map((community) => (
@@ -127,7 +133,7 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
         </TabsContent>
 
         <TabsContent value="newest" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCommunities
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map((community) => (
@@ -137,7 +143,7 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
         </TabsContent>
 
         <TabsContent value="joined" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCommunities
               .filter((community) => community.members.includes("steve_rogers"))
               .map((community) => (
@@ -146,6 +152,41 @@ export default function CommunitiesContent({ communities }: CommunitiesContentPr
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Community Guidelines */}
+      <div className="bg-slate-50 p-6 rounded-lg mt-8">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="bg-blue-100 text-blue-600 rounded-md p-2">
+            <Info className="h-5 w-5" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">Community Guidelines</h3>
+            <p className="text-muted-foreground">
+              Follow these guidelines to ensure a positive experience for everyone
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white p-4 rounded-md shadow-sm">
+            <h4 className="font-medium mb-2">Be Respectful</h4>
+            <p className="text-sm text-muted-foreground">Treat others with respect and kindness in all interactions</p>
+          </div>
+          <div className="bg-white p-4 rounded-md shadow-sm">
+            <h4 className="font-medium mb-2">Stay On Topic</h4>
+            <p className="text-sm text-muted-foreground">Keep discussions relevant to the community's purpose</p>
+          </div>
+          <div className="bg-white p-4 rounded-md shadow-sm">
+            <h4 className="font-medium mb-2">No Spam</h4>
+            <p className="text-sm text-muted-foreground">Avoid excessive self-promotion or irrelevant content</p>
+          </div>
+        </div>
+
+        <Button variant="outline" className="mt-4">
+          <Users className="h-4 w-4 mr-2" />
+          Read Full Guidelines
+        </Button>
+      </div>
     </div>
   )
 }
