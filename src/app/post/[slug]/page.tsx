@@ -1,26 +1,33 @@
-import type { Metadata } from "next"
-import { getPosts } from "@/lib/data"
-import AppLayout from "@/components/components/appLayout"
-import PostDetail from "@/components/components/postDetail"
-import PostDetailSidebar from "@/components/components/postDetailSidebar"
-
+import type { Metadata } from "next";
+import { getPosts } from "@/lib/data";
+import AppLayout from "@/components/components/appLayout";
+import PostDetail from "@/components/components/postDetail";
+import PostDetailSidebar from "@/components/components/postDetailSidebar";
 
 export const metadata: Metadata = {
   title: "Post - MeLi",
   description: "View post and replies on MeLi social media app",
+};
+
+// Generate static params for dynamic routes
+export async function generateStaticParams() {
+  const posts = getPosts();
+
+  return posts.map((post) => ({
+    slug: post.id,
+  }));
 }
 
 interface PostPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
 export default function PostPage({ params }: PostPageProps) {
-  const { slug } = params
-  const posts = getPosts()
-  const post = posts.find((post) => post.id === slug)
-  
+  const { slug } = params;
+  const posts = getPosts();
+  const post = posts.find((post) => post.id === slug);
 
   if (!post) {
     return (
@@ -29,7 +36,7 @@ export default function PostPage({ params }: PostPageProps) {
           <p className="text-lg text-muted-foreground">Post not found</p>
         </div>
       </AppLayout>
-    )
+    );
   }
 
   return (
@@ -38,5 +45,5 @@ export default function PostPage({ params }: PostPageProps) {
         <PostDetail post={post} />
       </div>
     </AppLayout>
-  )
+  );
 }
