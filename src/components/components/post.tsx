@@ -13,11 +13,10 @@ import { useRouter } from "next/navigation"
 import type { PostType, Reply } from "@/lib/data"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "../../../hooks/use-toast"
-import ReplyDialog from "./replyDialog"
 import ImageViewer from "./imageViewer"
-import Image from "next/image"
+import ReplyDialog from "./replyDialog"
 
-type PostProps = PostType;
+interface PostProps extends PostType {}
 
 export default function Post({ id, user, content, engagement, timestamp, replies = [] }: PostProps) {
   const [showReplies, setShowReplies] = useState(false)
@@ -128,7 +127,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
   }
 
   // Function to render media grid for replies
-  const renderReplyMediaGrid = (images?: string[]) => {
+  const renderReplyMediaGrid = (images?: string[], replyId?: string) => {
     if (!images || images.length === 0) return null
 
     return (
@@ -155,9 +154,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
               setImageViewerOpen(true)
             }}
           >
-            <Image
-              width={800}
-              height={800}
+            <img
               src={image || "/placeholder.svg"}
               alt={`Reply image ${index + 1}`}
               className={`w-full h-full object-cover ${
@@ -171,7 +168,7 @@ export default function Post({ id, user, content, engagement, timestamp, replies
   }
 
   // Function to render replies with proper nesting
-  const renderReplies = (replies: Reply[], level = 0) => {
+  const renderReplies = (replies: Reply[], level = 0, parentId?: string) => {
     // For the feed, only show first level replies and limit to 2
     if (level > 0 || replies.length === 0) return null
 
@@ -192,14 +189,28 @@ export default function Post({ id, user, content, engagement, timestamp, replies
             <div className="absolute w-4 h-0.5 bg-slate-200 left-[-16px] top-[30px]" />
 
             <div className="flex gap-3">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={reply.user.avatar || "/placeholder.svg"} alt={reply.user.name} />
-                <AvatarFallback>{reply.user.name.substring(0, 2)}</AvatarFallback>
-              </Avatar>
+              <Link href={`/user/${reply.user.username}`} onClick={(e) => e.stopPropagation()}>
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={reply.user.avatar || "/placeholder.svg"} alt={reply.user.name} />
+                  <AvatarFallback>{reply.user.name.substring(0, 2)}</AvatarFallback>
+                </Avatar>
+              </Link>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm">{reply.user.name}</span>
-                  <span className="text-xs text-muted-foreground">@{reply.user.username}</span>
+                  <Link
+                    href={`/user/${reply.user.username}`}
+                    className="font-semibold text-sm hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {reply.user.name}
+                  </Link>
+                  <Link
+                    href={`/user/${reply.user.username}`}
+                    className="text-xs text-muted-foreground hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    @{reply.user.username}
+                  </Link>
                   <span className="text-xs text-muted-foreground">· {reply.timestamp}</span>
                 </div>
                 {reply.replyingTo && (
@@ -210,8 +221,8 @@ export default function Post({ id, user, content, engagement, timestamp, replies
                 <p className="text-sm mt-1">{reply.content.text}</p>
 
                 {/* Render media grid for reply */}
-                {reply.content.images && renderReplyMediaGrid(reply.content.images)}
-                {reply.content.image && !reply.content.images && renderReplyMediaGrid([reply.content.image])}
+                {reply.content.images && renderReplyMediaGrid(reply.content.images, reply.id)}
+                {reply.content.image && !reply.content.images && renderReplyMediaGrid([reply.content.image], reply.id)}
 
                 <div className="flex gap-4 mt-2">
                   <Button
@@ -292,13 +303,11 @@ export default function Post({ id, user, content, engagement, timestamp, replies
           <div
             key={index}
             className={`relative ${
-              images.length === 2  ? "aspect-[11/12]" : images.length === 3 && index === 0 ? "col-span-1 row-span-2": images.length === 3 ? "aspect-video" : images.length === 4 ? "aspect-video" : ""
+              images.length === 3 && index === 0 ? "col-span-2 row-span-2" : images.length === 4 ? "aspect-square" : ""
             }`}
             onClick={(e) => handleImageClick(index, e)}
           >
-            <Image
-              width={800}
-              height={800}
+            <img
               src={image || "/placeholder.svg"}
               alt={`Post image ${index + 1}`}
               className={`w-full h-full object-cover ${
@@ -320,14 +329,28 @@ export default function Post({ id, user, content, engagement, timestamp, replies
     <>
       <Card className="mb-4 cursor-pointer hover:bg-slate-50 transition-colors" onClick={handlePostClick}>
         <CardHeader className="flex flex-row items-start gap-4 pb-2">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-            <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
-          </Avatar>
+          <Link href={`/user/${user.username}`} onClick={(e) => e.stopPropagation()}>
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
+              <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-bold">{user.name}</span>
-              <span className="text-muted-foreground">@{user.username}</span>
+              <Link
+                href={`/user/${user.username}`}
+                className="font-bold hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {user.name}
+              </Link>
+              <Link
+                href={`/user/${user.username}`}
+                className="text-muted-foreground hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                @{user.username}
+              </Link>
               {content.verified && (
                 <Badge variant="outline" className="ml-auto bg-green-50 text-green-600 border-green-200">
                   Postingan diverifikasi
