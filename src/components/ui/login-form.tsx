@@ -32,7 +32,7 @@ export function LoginForm({
     if (result?.error) {
       setError("Invalid email or password")
     } else {
-      router.push("/dashboard") // arahkan ke halaman setelah login
+      router.push("/app") // arahkan ke halaman setelah login
     }
   }
 
