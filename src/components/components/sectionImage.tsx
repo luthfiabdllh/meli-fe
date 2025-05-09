@@ -32,7 +32,7 @@ export const sectionProps1 : IsectionProps = {
     title: "Sehat bersama fakta, jauhi berita hoax !!",
     text: "Fakta kesehatan merupakan hal yang sangat penting untuk seluruh orang, jangan sampai hoax merenggut nyawa anda.",
     button: {
-        buttonHref: "/",
+        buttonHref: "/login",
         buttonIcon: 
         <Image
         src="/icon/icon_whatsapp.svg"
@@ -57,7 +57,7 @@ export const sectionProps2 : IsectionProps = {
     title: "Berbagi bersama, sehat bersama",
     text: "Fakta kesehatan merupakan hal yang sangat penting untuk seluruh orang, jangan sampai hoax merenggut nyawa anda.",
     button: {
-        buttonHref: "/",
+        buttonHref: "/register",
         buttonIcon: 
         <Image
         src="/icon/icon_whatsapp.svg"
@@ -75,6 +75,7 @@ export default function SectionImage( { sectionProps, imagePosition }: { section
     return (
         <div
             className= "grid md:grid-cols-2 md:grid-flow-dense gap-4 items-center justify-items-center px-4 lg:px-14 mb-10 my-18 lg:my-36" 
+            id="about"
         >
             <div className={`w-full flex justify-center ${imagePosition === eImagePosition.RIGHT ? "md:col-start-2" : "md:col-start-1"}`}>
                 {sectionProps.srcImage}

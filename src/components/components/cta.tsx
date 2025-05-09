@@ -22,11 +22,11 @@ const Cta = ({
   buttons = {
     primary: {
       text: "Masuk",
-      url: "/",
+      url: "/login",
     },
     secondary: {
       text: "Daftar Akun",
-      url: "/",
+      url: "/register",
     },
   },
 }: ctaProps) => {

@@ -21,7 +21,7 @@ const FeatureData = [
   title: "Performance",
   text: "Anda dapat bertukar informasi dan tanya jawab di postingan sesama pengguna lain MeLi",
   button: {
-    buttonHref: "/",
+    buttonHref: "/login",
     buttonIcon: "/icon/icon_whatsapp.svg",
     buttonText: "Mulai Bersosialisasi",
   },
@@ -31,7 +31,7 @@ const FeatureData = [
   title: "Baca Artikel Kesehatan",
   text: "Dapatkan informasi kesehatan terpercaya dari para ahli di bidangnya.",
   button: {
-    buttonHref: "/health",
+    buttonHref: "/login",
     buttonIcon: "/icon/icon_whatsapp.svg",
     buttonText: "Hubungi",
   },
@@ -41,7 +41,7 @@ const FeatureData = [
   title: "Chatbot AI",
   text: "Toko tempat meramu dan menjual obat berdasarkan resep dokter serta memperdagangkan barang medis",
   button: {
-    buttonHref: "/community",
+    buttonHref: "/login",
     buttonIcon: "/icon/icon_whatsapp.svg",
     buttonText: "Mulai Percakapan",
   },
@@ -50,7 +50,7 @@ const FeatureData = [
 
 const Feature = () => {
   return (
-    <section className="items-center justify-items-center my-20 px-4 lg:px-14">
+    <section className="items-center justify-items-center my-20 px-4 lg:px-14" id="service">
       <div className="container">
         <div className="lg:flex justify-between">
             <h2 className="text-3xl font-semibold font-poppins lg:text-4xl">Daftar Layanan</h2>

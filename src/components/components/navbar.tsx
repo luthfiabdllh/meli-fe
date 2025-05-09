@@ -43,13 +43,13 @@ const Navbar = ({
     title: "Meli",
   },
   menu = [
-    { title: "Beranda", url: "#" },
-    { title: "Tentang Kami", url: "#" },
-    { title: "Layanan", url: "#" },
-    { title: "Kontak Kami", url: "#" },
+    { title: "Beranda", url: "/" },
+    { title: "Tentang Kami", url: "#about" },
+    { title: "Layanan", url: "#service" },
+    { title: "Kontak Kami", url: "#contact" },
   ],
   auth = {
-    login: { title: "Masuk", url: "#" },
+    login: { title: "Masuk", url: "/login" },
   },
 }: NavbarProps) => {
   return (

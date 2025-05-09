@@ -39,7 +39,7 @@ const Footer = ({
   },
 }: footerProps) => {
   return (
-    <section className=" px-4 lg:px-34 py-15 bg-destructive text-white dark:text-black">
+    <section className=" px-4 lg:px-34 py-15 bg-destructive text-white dark:text-black" id="contact">
       <div className="container">
         <div className="flex w-full flex-col items-center justify-between gap-10 text-center lg:flex-row lg:items-start lg:text-left">
           <div className="flex w-full flex-col items-center justify-between gap-6 lg:items-start">
