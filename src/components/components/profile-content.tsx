@@ -1,10 +1,41 @@
+"use client"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MapPin, Calendar, LinkIcon } from "lucide-react"
 import Post from "@/components/ui/post"
+import { getOwnUserDetails, getOwnUserFollowersFollowing } from "@/app/api/user/profileApi"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { FaBirthdayCake } from "react-icons/fa"
+import { formatDate, formatNumber, truncate } from "@/lib/formatter/format"
+import { EditProfileDialog } from "./editProfileDialog"
 
 export default function ProfileContent() {
+  const { data: session } = useSession();
+  const [user, setUser] = useState<any>(null);
+  const [followData, setFollowData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!session?.accessToken) return;
+    getOwnUserDetails(session.accessToken, session.user.id)
+      .then(setUser)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [session?.accessToken, session?.user?.id]);
+
+  useEffect(() => {
+    if (!session?.accessToken || !session?.user?.id) return;
+    getOwnUserFollowersFollowing(session.accessToken, session.user.id)
+      .then(setFollowData)
+      .catch(console.error);
+  }, [session?.accessToken, session?.user?.id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <div>User not found</div>;
+
   const posts = [
     {
       id: "post1",
@@ -52,43 +83,37 @@ export default function ProfileContent() {
         <div className="h-40 bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg"></div>
         <div className="absolute -bottom-16 left-4 border-4 border-white rounded-full">
           <Avatar className="h-32 w-32">
-            <AvatarImage src="/placeholder.svg?height=128&width=128&text=SR" alt="Steve Rogers" />
+            <AvatarImage src={user.image} alt="Steve Rogers" />
             <AvatarFallback>SR</AvatarFallback>
           </Avatar>
         </div>
         <div className="flex justify-end p-4">
-          <Button>Edit Profile</Button>
+          <EditProfileDialog trigger={<Button>Edit Profile</Button>} />
         </div>
       </div>
 
       {/* Profile Info */}
       <div className="pt-16 px-4">
-        <h1 className="text-2xl font-bold">Steve Rogers</h1>
-        <p className="text-muted-foreground">@steve_rogers</p>
+        <h1 className="text-2xl font-bold">{user.username}</h1>
+        <p className="text-muted-foreground">@{user.username}</p>
 
         <div className="flex flex-wrap gap-4 mt-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <MapPin className="h-4 w-4" />
-            <span>New York, USA</span>
+            <span>{user.address ? truncate(user.address, 45) : "not set"}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            <span>Joined July 4, 1918</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <LinkIcon className="h-4 w-4" />
-            <a href="#" className="text-blue-500 hover:underline">
-              shield.gov
-            </a>
+            <FaBirthdayCake className="h-4 w-4" />
+            <span>{user.birthDate ? formatDate(user?.birthDate) : "not set"}</span>
           </div>
         </div>
 
         <div className="flex gap-4 mt-4">
           <div>
-            <span className="font-bold">256</span> <span className="text-muted-foreground">Following</span>
+            <span className="font-bold">{formatNumber(followData?.followingCount ?? 0)}</span> <span className="text-muted-foreground">Following</span>
           </div>
           <div>
-            <span className="font-bold">4.2M</span> <span className="text-muted-foreground">Followers</span>
+            <span className="font-bold">{formatNumber(followData?.followers ?? 0)}</span> <span className="text-muted-foreground">Followers</span>
           </div>
         </div>
       </div>
