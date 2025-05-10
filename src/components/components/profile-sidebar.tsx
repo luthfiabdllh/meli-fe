@@ -51,7 +51,7 @@ export default function ProfileSidebar() {
           <CardTitle className="text-lg text-purple-600">About</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm">
+          <p className="text-sm break-all">
             {user?.bio || "No bio available."}
           </p>
         </CardContent>

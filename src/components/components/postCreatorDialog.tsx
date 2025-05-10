@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { ImageIcon, Video, Loader2 } from "lucide-react"
 import MediaPreviewSlider from "./mediaPreviewSlider"
 import { useSession } from "next-auth/react"
 import { createThread, uploadImage } from "@/app/api/thread/createThread"
+import { getOwnUserDetails } from "@/app/api/user/profileApi"
 
 interface PostCreatorDialogProps {
   open: boolean
@@ -23,8 +24,16 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
   const [postText, setPostText] = useState("")
   const [mediaFiles, setMediaFiles] = useState<File[]>([])
   const [mediaPreviews, setMediaPreviews] = useState<string[]>([])
+  const [user, setUser] = useState<any>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { data: session } = useSession()
+
+  useEffect(() => {
+    if (!session?.accessToken || !session?.user?.id) return;
+    getOwnUserDetails(session.accessToken, session.user.id)
+      .then(setUser)
+      .catch(console.error);
+  }, [session?.accessToken, session?.user?.id]);
 
   const handleSubmit = async () => {
     if (!postText.trim() && mediaFiles.length === 0) return
@@ -118,7 +127,7 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
         <div className="space-y-4">
           <div className="flex gap-3">
             <Avatar className="h-10 w-10">
-              <AvatarImage src="/placeholder.svg?height=40&width=40&text=SR" alt="Your avatar" />
+              <AvatarImage src={user?.image} alt="PR" />
               <AvatarFallback>SR</AvatarFallback>
             </Avatar>
             <Textarea
