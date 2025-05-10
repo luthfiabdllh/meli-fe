@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { ImageIcon, Video, Loader2 } from "lucide-react"
 import MediaPreviewSlider from "./mediaPreviewSlider"
+import { useSession } from "next-auth/react"
+import { createThread, uploadImage } from "@/app/api/thread/createThread"
 
 interface PostCreatorDialogProps {
   open: boolean
@@ -22,11 +24,35 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
   const [mediaFiles, setMediaFiles] = useState<File[]>([])
   const [mediaPreviews, setMediaPreviews] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { data: session } = useSession()
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!postText.trim() && mediaFiles.length === 0) return
-    onSubmitPost(postText, mediaFiles)
-    resetForm()
+    if (!session?.accessToken) return;
+
+    try {
+      let imageId: number | null = null;
+
+      // Upload image jika ada file
+      if (mediaFiles.length > 0) {
+        imageId = await uploadImage(session.accessToken, mediaFiles[0]);
+      }
+
+      console.log("Image ID:", imageId);
+
+      // Selalu kirim image_id (null jika tidak upload)
+      const payload: any = {
+        content: postText,
+        image_id: imageId,
+      };
+
+      await createThread(session.accessToken, payload);
+
+      resetForm();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error creating post:", error)
+    }
   }
 
   const resetForm = () => {
@@ -44,7 +70,7 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
 
     // Only add files if we're under the limit of 4
     for (let i = 0; i < files.length; i++) {
-      if (mediaFiles.length + newFiles.length >= 4) break
+      if (mediaFiles.length + newFiles.length >= 1) break
 
       const file = files[i]
       newFiles.push(file)
@@ -97,7 +123,7 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
             </Avatar>
             <Textarea
               placeholder="What's happening?"
-              className="flex-1 resize-none border-none shadow-none focus-visible:ring-0 text-lg"
+              className="flex-1 resize-none border-1 shadow-none focus-visible:ring-2 text-lg break-all"
               value={postText}
               onChange={(e) => setPostText(e.target.value)}
               rows={3}
@@ -121,14 +147,14 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
               accept="image/*,video/*"
               multiple
               className="hidden"
-              disabled={mediaFiles.length >= 4 || isSubmitting}
+              disabled={mediaFiles.length >= 1 || isSubmitting}
             />
             <Button
               variant="outline"
               size="sm"
               className="text-blue-500"
               onClick={() => fileInputRef.current?.click()}
-              disabled={mediaFiles.length >= 4 || isSubmitting}
+              disabled={mediaFiles.length >= 1 || isSubmitting}
             >
               <ImageIcon className="h-4 w-4 mr-2" />
               Photo
@@ -138,12 +164,12 @@ export default function PostCreatorDialog({ open, onOpenChange, onSubmitPost, is
               size="sm"
               className="text-blue-500"
               onClick={() => fileInputRef.current?.click()}
-              disabled={mediaFiles.length >= 4 || isSubmitting}
+              disabled={mediaFiles.length >= 1 || isSubmitting}
             >
               <Video className="h-4 w-4 mr-2" />
               Video
             </Button>
-            <div className="text-xs text-muted-foreground">{mediaFiles.length}/4</div>
+            <div className="text-xs text-muted-foreground">{mediaFiles.length}/1</div>
           </div>
           <Button
             onClick={handleSubmit}

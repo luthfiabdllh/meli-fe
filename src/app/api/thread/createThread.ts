@@ -10,7 +10,7 @@ export async function uploadImage(token: string, file: File) {
       "Content-Type": "multipart/form-data",
     },
   });
-  return res.data.image_id;
+  return res.data.id;
 }
 
 export async function createThread(token: string, data: any) {
@@ -19,5 +19,5 @@ export async function createThread(token: string, data: any) {
       Authorization: `Bearer ${token}`,
     },
   });
-  return res.data.userDetailsEdited;
+  return res.data.threadsCreated;
 }
