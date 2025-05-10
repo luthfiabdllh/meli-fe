@@ -1,6 +1,7 @@
 import { Poppins, Sora } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import SessionProviderWrapper from "@/components/components/sessionProviderWrappar";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${sora.className} ${poppins.variable} antialiased`}>
+        <SessionProviderWrapper>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
         </ThemeProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );
