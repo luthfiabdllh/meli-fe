@@ -1,9 +1,22 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, Users, Calendar } from "lucide-react"
+import { Users} from "lucide-react"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+import { getRecomendationsUsers } from "@/app/api/user/usersApi"
 
 export default function HomeSidebar() {
+  const { data: session } = useSession()
+  const [recomendations, setRecomendations] = useState<any>(null)
+
+  useEffect(() => {
+    if (!session?.accessToken) return;
+    getRecomendationsUsers(session.accessToken)
+      .then(setRecomendations)
+      .catch(console.error);
+  }, [session?.accessToken]);
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -11,75 +24,29 @@ export default function HomeSidebar() {
           <CardTitle className="text-lg text-purple-600">Rekomendasi</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="flex items-center gap-3">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={`/placeholder.svg?height=48&width=48&text=${i}`} alt="User" />
-                <AvatarFallback>TS</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-1">
-                <p className="font-medium">Tony Stark</p>
-                <p className="text-xs text-muted-foreground">I am a metal man, who saves lots...</p>
-                <p className="text-xs font-medium text-blue-500">6M+ Followers</p>
-              </div>
-            </div>
-          ))}
-          <Button variant="outline" className="w-full">
-            Lihat Semua
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg text-purple-600">Upcoming Events</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-3">
-            <div className="bg-blue-100 text-blue-600 rounded-md p-2">
-              <Calendar className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-medium">Tech Conference 2023</p>
-              <p className="text-xs text-muted-foreground">Tomorrow, 10:00 AM</p>
-              <p className="text-xs text-blue-500 mt-1">12 friends going</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="bg-purple-100 text-purple-600 rounded-md p-2">
-              <Calendar className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-medium">Product Launch</p>
-              <p className="text-xs text-muted-foreground">May 15, 2:00 PM</p>
-              <p className="text-xs text-blue-500 mt-1">5 friends going</p>
-            </div>
-          </div>
-          <Button variant="outline" className="w-full">
-            View Calendar
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg text-purple-600">Trending Topics</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-start gap-3">
-              <div className="bg-amber-100 text-amber-600 rounded-md p-2">
-                <TrendingUp className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="font-medium">#{["Technology", "Health", "Science"][i - 1]}</p>
-                <p className="text-xs text-muted-foreground">{Math.floor(Math.random() * 100) + 1}K posts</p>
-              </div>
-            </div>
-          ))}
-          <Button variant="outline" className="w-full">
-            See More
-          </Button>
+          {!recomendations ? (
+            // Skeleton atau loading
+            <div className="text-sm text-muted-foreground">Loading...</div>
+          ) : (
+            (Array.isArray(recomendations?.users) ? recomendations.users : recomendations || [])
+              .filter((user: any) => user.id !== session?.user?.id)
+              .slice(0, 5)
+              .map((user: any) => (
+                <div key={user.id} className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={user.image || "/placeholder.svg?height=96&width=96"} alt={user.username || "User"} />
+                    <AvatarFallback>
+                      {user.username?.[0]?.toUpperCase() || "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="font-medium">{user.username || "Unknown User"}</p>
+                    {/* <p className="text-xs text-muted-foreground">I am a metal man, who saves lots...</p>
+                    <p className="text-xs font-medium text-blue-500">6M+ Followers</p> */}
+                  </div>
+                </div>
+              ))
+          )}
         </CardContent>
       </Card>
 
