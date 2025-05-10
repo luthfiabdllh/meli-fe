@@ -6,9 +6,22 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Home, MessageCircle, Bell, Search } from "lucide-react"
 import { useMediaQuery } from "../../../hooks/use-media-query"
+import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
+import { getOwnUserDetails } from "@/app/api/user/profileApi"
 
 export default function Header() {
   const isDesktop = useMediaQuery("(min-width: 768px)")
+    const { data: session } = useSession();
+
+  const [user, setUser] = useState<any>(null)
+  
+  useEffect(() => {
+    if (!session?.accessToken || !session?.user?.id) return;
+    getOwnUserDetails(session.accessToken, session.user.id)
+      .then(setUser)
+      .catch(console.error);
+  }, [session?.accessToken, session?.user?.id]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -51,13 +64,13 @@ export default function Header() {
 
           <div className="flex items-center gap-2">
             <Avatar className="h-9 w-9 bg-rose-200">
-              <AvatarImage src="/placeholder.svg?height=36&width=36" alt="@steve_rogers" />
+              <AvatarImage src={user?.image} alt="@user?.username" />
               <AvatarFallback>SR</AvatarFallback>
             </Avatar>
             {isDesktop && (
               <div className="text-sm">
-                <p className="font-medium">Steve Rogers</p>
-                <p className="text-xs text-muted-foreground">@steve_rogers</p>
+                <p className="font-medium">{user?.username}</p>
+                <p className="text-xs text-muted-foreground">@{user?.username}</p>
               </div>
             )}
           </div>
