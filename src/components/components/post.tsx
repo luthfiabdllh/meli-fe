@@ -15,10 +15,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "../../../hooks/use-toast"
 import ImageViewer from "./imageViewer"
 import ReplyDialog from "./replyDialog"
+import { useSession } from "next-auth/react"
+import { like, unlike } from "@/app/api/thread/like"
+import { replyThread } from "@/app/api/thread/replyThread"
 
 interface PostProps extends PostType {}
 
 export default function Post({ id, user, content, engagement, timestamp, replies = [] }: PostProps) {
+  const { data: session } = useSession();
   const [showReplies, setShowReplies] = useState(false)
   const [replyDialogOpen, setReplyDialogOpen] = useState(false)
   const [replyingTo, setReplyingTo] = useState<{
@@ -69,62 +73,102 @@ export default function Post({ id, user, content, engagement, timestamp, replies
     setReplyDialogOpen(true)
   }
 
-  const handleSubmitReply = (text: string, media: File[]) => {
-    if ((!text.trim() && media.length === 0) || !replyingTo) return
+  const handleSubmitReply = async (text: string) => {
+    setIsSubmitting(true);
 
-    setIsSubmitting(true)
-
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Reply submitted:", { text, media, replyingTo })
-      setIsSubmitting(false)
-      setReplyDialogOpen(false)
-      setReplyingTo(null)
-      // In a real app, you would add the reply to the post
-    }, 1000)
-  }
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setLiked(!liked)
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
-
-    // Show toast notification
-    if (!liked) {
+    try {
+      // Kirim reply ke thread atau comment
+      const comment = await replyThread(
+        session?.accessToken!,
+        id,
+        {
+          content: text,
+        }
+      );
       toast({
-        title: "Post liked",
-        description: "You've liked this post",
+        title: "Reply sent",
+        description: "Your reply has been posted.",
+      });
+      setReplyDialogOpen(false);
+      setReplyingTo(null);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send reply.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!session?.accessToken) {
+      toast({
+        title: "Login required",
+        description: "You must be logged in to like a post.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (!liked) {
+        // Like thread
+        const thread = await like(session.accessToken, id);
+        setLiked(true);
+        setLikeCount(thread.like_count);
+        toast({
+          title: "Post liked",
+          description: "You've liked this post",
+        });
+      } else {
+        // Unlike thread
+        const thread = await unlike(session.accessToken, id);
+        setLiked(false);
+        setLikeCount(thread.like_count);
+        toast({
+          title: "Like removed",
+          description: "You've unliked this post",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update like status.",
+        variant: "destructive",
+      });
+    }
+  };
+
+    const handleShare = (platform: string) => {
+      // Increase share count
+      setShareCount((prev) => prev + 1)
+
+      // In a real app, you would implement actual sharing functionality
+      const shareUrl = `${window.location.origin}/post/${id}`
+
+      // Show toast based on share type
+      toast({
+        title: `Shared on ${platform}`,
+        description: platform === "copy" ? "Link copied to clipboard!" : `Post shared on ${platform}`,
       })
+
+      // If copying to clipboard
+      if (platform === "copy") {
+        navigator.clipboard.writeText(shareUrl)
+      } else {
+        console.log(`Sharing to ${platform}: ${shareUrl}`)
+        // In a real app, you would open the respective sharing dialog
+      }
     }
-  }
 
-  const handleShare = (platform: string) => {
-    // Increase share count
-    setShareCount((prev) => prev + 1)
-
-    // In a real app, you would implement actual sharing functionality
-    const shareUrl = `${window.location.origin}/post/${id}`
-
-    // Show toast based on share type
-    toast({
-      title: `Shared on ${platform}`,
-      description: platform === "copy" ? "Link copied to clipboard!" : `Post shared on ${platform}`,
-    })
-
-    // If copying to clipboard
-    if (platform === "copy") {
-      navigator.clipboard.writeText(shareUrl)
-    } else {
-      console.log(`Sharing to ${platform}: ${shareUrl}`)
-      // In a real app, you would open the respective sharing dialog
+    const handleImageClick = (index: number, e: React.MouseEvent) => {
+      e.stopPropagation()
+      setSelectedImageIndex(index)
+      setImageViewerOpen(true)
     }
-  }
-
-  const handleImageClick = (index: number, e: React.MouseEvent) => {
-    e.stopPropagation()
-    setSelectedImageIndex(index)
-    setImageViewerOpen(true)
-  }
 
   // Function to render media grid for replies
   const renderReplyMediaGrid = (images?: string[], replyId?: string) => {
@@ -231,8 +275,8 @@ export default function Post({ id, user, content, engagement, timestamp, replies
                     className="h-6 px-2 text-xs gap-1 text-muted-foreground"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <Heart className="h-3 w-3" />
                     <span>{reply.likes}</span>
+                    <Heart className="h-3 w-3" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -366,15 +410,15 @@ export default function Post({ id, user, content, engagement, timestamp, replies
           <p className="text-xs text-muted-foreground mt-2">{timestamp}</p>
         </CardContent>
         <CardFooter className="flex justify-between pt-2 flex-wrap gap-2">
-          <Button
+            <Button
             variant="ghost"
             size="sm"
-            className={`gap-1 ${liked ? "text-rose-500" : "text-muted-foreground"}`}
+            className={`gap-1 ${liked ? "text-muted-foreground" : "text-muted-foreground"}`}
             onClick={handleLike}
-          >
-            <Heart className={`h-4 w-4 ${liked ? "fill-rose-500" : ""}`} />
-            <span>Like {likeCount}</span>
-          </Button>
+            >
+            <Heart className={`h-4 w-4 ${liked ? "fill-muted-foreground" : ""}`} />
+            <span>{likeCount} Likes</span>
+            </Button>
           <Button
             variant="ghost"
             size="sm"
