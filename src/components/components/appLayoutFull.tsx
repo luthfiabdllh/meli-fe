@@ -1,7 +1,10 @@
+"use client"
+
 import type { ReactNode } from "react"
 import Header from "./header"
 import Sidebar from "./sidebar"
 import BottomBar from "./bottomBar"
+import { SessionProvider } from "next-auth/react"
 
 interface FullWidthLayoutProps {
   children: ReactNode
@@ -9,6 +12,7 @@ interface FullWidthLayoutProps {
 
 export default function AppLayoutFull({ children }: FullWidthLayoutProps) {
   return (
+    <SessionProvider>
     <div className="min-h-screen bg-slate-50">
       {/* Fixed Header */}
       <Header />
@@ -37,5 +41,6 @@ export default function AppLayoutFull({ children }: FullWidthLayoutProps) {
         <BottomBar />
       </div>
     </div>
+    </SessionProvider>
   )
 }

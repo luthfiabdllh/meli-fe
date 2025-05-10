@@ -1,8 +1,11 @@
+"use client"
+
 import type { ReactNode } from "react"
 import Header from "./header"
 import Sidebar from "./sidebar"
 import BottomBar from "./bottomBar"
 import DefaultRightSidebar from "./rightSidebat"
+import { SessionProvider } from "next-auth/react"
 
 interface LayoutProps {
   children: ReactNode
@@ -11,6 +14,7 @@ interface LayoutProps {
 
 export default function AppLayout({ children, rightSidebarContent }: LayoutProps) {
   return (
+    <SessionProvider>
     <div className="min-h-screen bg-slate-50">
     {/* Fixed Header */}
     <Header />
@@ -44,5 +48,6 @@ export default function AppLayout({ children, rightSidebarContent }: LayoutProps
       <BottomBar />
     </div>
   </div>
+  </SessionProvider>
   )
 }
