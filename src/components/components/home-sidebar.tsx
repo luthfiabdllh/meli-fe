@@ -41,8 +41,8 @@ export default function HomeSidebar() {
                   </Avatar>
                   <div className="flex-1 space-y-1">
                     <p className="font-medium">{user.username || "Unknown User"}</p>
-                    {/* <p className="text-xs text-muted-foreground">I am a metal man, who saves lots...</p>
-                    <p className="text-xs font-medium text-blue-500">6M+ Followers</p> */}
+                    <p className="text-xs text-muted-foreground">@{user.username}</p>
+                    {/* <p className="text-xs font-medium text-blue-500">6M+ Followers</p> */}
                   </div>
                 </div>
               ))
