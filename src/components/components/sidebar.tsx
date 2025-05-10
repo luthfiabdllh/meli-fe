@@ -1,6 +1,6 @@
 "use client"
 
-import { CirclePlus, Home, LogOut, Settings, User, Users } from "lucide-react";
+import { BookOpen, CirclePlus, Home, LogOut, Settings, User, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import PostCreatorDialog from "./postCreatorDialog";
@@ -57,6 +57,10 @@ export default function Sidebar() {
     const handleCommunityClick = () => {
       Router.push("/communities")
     }
+    
+    const handleArticlesClick = () => {
+      Router.push("/articles")
+    }
 
   return (
     <>
@@ -91,6 +95,10 @@ export default function Sidebar() {
           <Button onClick={handleCommunityClick} variant="ghost" className="justify-start gap-2 text-slate-700 sm:px-2 md:px-4">
             <Users className="h-5 w-5 flex-shrink-0" />
             <span className="hidden md:inline">Komunitas Sehat</span>
+          </Button>
+          <Button onClick={handleArticlesClick} variant="ghost" className="justify-start gap-2 text-slate-700 sm:px-2 md:px-4">
+            <BookOpen className="h-5 w-5 flex-shrink-0" />
+            <span className="hidden md:inline">Artikel</span>
           </Button>
           <Button variant="ghost" onClick={openDialog} className="justify-start gap-2 text-slate-700 sm:px-2 md:px-4">
             <CirclePlus className="h-5 w-5 flex-shrink-0" />
