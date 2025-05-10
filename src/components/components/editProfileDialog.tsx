@@ -61,12 +61,13 @@ export function EditProfileDialog({ user, trigger }: EditProfileDialogProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setSelectedFile(file); // <-- Tambahkan baris ini!
     }
-  }
+  };
   const clearFilePreview = () => {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl)
@@ -121,9 +122,11 @@ const handleSubmit = async (e: React.FormEvent) => {
     let imageId = avatar; // default, jika tidak upload baru
 
     if (selectedFile) {
-      imageId = await uploadAvatar(token, selectedFile); // uploadAvatar harus return ID
+      imageId = await uploadAvatar(token, selectedFile);
       setAvatar(imageId);
     }
+
+    console.log("Selected file:", imageId);
 
     await editUserDetails(token, session.user.id, {
       username,

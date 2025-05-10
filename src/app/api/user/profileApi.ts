@@ -45,7 +45,7 @@ export async function uploadAvatar(token: string, file: File) {
       "Content-Type": "multipart/form-data",
     },
   });
-  return res.data.image_id;
+  return res.data.id;
 }
 
 export async function editUserDetails(token: string, id: string, data: any) {
