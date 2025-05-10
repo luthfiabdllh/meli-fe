@@ -13,6 +13,6 @@ export const config = {
     matcher: [
     "/app",
     "/dashboard",
-    "/((?!api|_next/static|_next/image|favicon.ico|login|register|logo.svg|images).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|register|logo.svg|images|icon).*)",
     ],
   }

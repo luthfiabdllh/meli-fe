@@ -11,7 +11,7 @@ export const SectionBorder = () => {
             className="w-32 lg:w-auto"
             alt="icon"/>
             <Image
-            src="/logo_gdgoc.svg"
+            src="/images/logo_gdgoc.svg"
             width={607}
             height={107}
             className="w-48 lg:w-auto"
