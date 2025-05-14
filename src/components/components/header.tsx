@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Home, MessageCircle, Bell, Search } from "lucide-react"
+import { Home, Bell, Search, BotMessageSquare } from "lucide-react"
 import { useMediaQuery } from "../../../hooks/use-media-query"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
@@ -49,8 +49,8 @@ export default function Header() {
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild className="text-slate-600">
-              <Link href="/messages">
-                <MessageCircle className="h-5 w-5" />
+              <Link href="/chatAi">
+                <BotMessageSquare className="h-5 w-5" />
                 <span className="sr-only">Messages</span>
               </Link>
             </Button>
