@@ -388,20 +388,13 @@ export default function Post({ id, user, content, engagement, timestamp, replies
               >
                 {user.name}
               </Link>
-              <Link
-                href={`/user/${user.username}`}
-                className="text-muted-foreground hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                @{user.username}
-              </Link>
               {content.verified && (
                 <Badge variant="outline" className="ml-auto bg-green-50 text-green-600 border-green-200">
                   Postingan diverifikasi
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">Dokter spesialis klinik kesehatan GMC UGM</p>
+            <p className="text-sm text-muted-foreground">@{user.username}</p>
           </div>
         </CardHeader>
         <CardContent className="pb-2">

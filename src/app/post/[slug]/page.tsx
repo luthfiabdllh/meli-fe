@@ -32,36 +32,35 @@ export default function PostPage({ params }: { params: Promise<{ slug: string }>
             id: authorData.id,
             name: authorData.username,
             username: authorData.username,
-            avatar: authorData.image,
+            avatar: authorData.image ?? null,
           },
           content: {
             text: threadData.content,
-            image: threadData.image,
+            image: threadData.image ?? null,
             images: threadData.image ? [threadData.image] : [],
           },
           engagement: {
-            likes: threadData.likes_count,
+            likes: threadData.likes_count ?? 0,
             replies: commentsData.length,
             shares: 0,
           },
           replies: commentsData.map((c: any) => ({
             id: c.id,
             user: {
-              id: c.author.id,
-              name: c.author.username,
-              username: c.author.username,
-              avatar: c.author.image,
+              id: c.user_id,
+              name: authorData.username, // statis karena tidak ada di comment
+              username: authorData.username,
+              avatar: authorData.image ?? null,
             },
             content: {
               text: c.content,
               image: null,
               images: [],
             },
-            likes: c.like_count ?? 0,
-            replies: [],
-            timestamp: c.timestamp ?? "",
+            likes: c.like_count ?? 0, // default 0 kalau tidak tersedia
+            timestamp: c.created_at ?? "",
           })),
-          timestamp: threadData.timestamp ?? "",
+          timestamp: threadData.created_at ?? "",
         };
         setPost(mappedPost);
       } catch (err) {

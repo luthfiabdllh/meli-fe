@@ -313,10 +313,12 @@ export default function PostDetail({ post }: PostDetailProps) {
                     <AvatarFallback>{reply.user.name.substring(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold">{reply.user.name}</span>
-                      <span className="text-muted-foreground">@{reply.user.username}</span>
-                      <span className="text-muted-foreground">· {reply.timestamp}</span>
+                    <div className="flex gap-0">
+                      <div className="flex flex-col">
+                        <span className="font-bold">{reply.user.name}</span>
+                        <span className="text-muted-foreground">@{reply.user.username}</span>
+                      </div>
+                      {/* <span className="text-muted-foreground">· {reply.timestamp}</span> */}
                     </div>
                     {reply.replyingTo && (
                       <p className="text-sm text-muted-foreground">
