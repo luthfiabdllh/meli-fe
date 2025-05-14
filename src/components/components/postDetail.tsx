@@ -25,12 +25,16 @@ import { useToast } from "../../../hooks/use-toast"
 import ImageViewer from "./imageViewer"
 import ReplyDialog from "./replyDialog"
 import Image from "next/image"
+import { useSession } from "next-auth/react"
+import { replyThread } from "@/app/api/thread/replyThread";
+
 
 interface PostDetailProps {
   post: PostType
 }
 
 export default function PostDetail({ post }: PostDetailProps) {
+  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [replyDialogOpen, setReplyDialogOpen] = useState(false)
   const [replyingTo, setReplyingTo] = useState<{
@@ -80,27 +84,70 @@ export default function PostDetail({ post }: PostDetailProps) {
   }
 
   const handleReplyToComment = useCallback((id: string, username: string, text: string, isPost = false) => {
+
     setReplyingTo({ id, username, text, isPost })
     setReplyDialogOpen(true)
   }, [])
 
   const handleSubmitReply = useCallback(
-    (text: string, media: File[]) => {
-      if ((!text.trim() && media.length === 0) || !replyingTo) return
-
-      setIsSubmitting(true)
-
-      // Simulate API call
-      setTimeout(() => {
-        console.log("Reply submitted:", { text, media, replyingTo })
-        setIsSubmitting(false)
-        setReplyDialogOpen(false)
-        setReplyingTo(null)
-        // In a real app, you would add the reply to the post
-      }, 1000)
+    async (text: string, media: File[]) => {
+      if ((!text.trim() && media.length === 0) || !replyingTo) return;
+      
+      // Pastikan user sudah login
+      if (!session?.accessToken) {
+        toast({
+          title: "Authentication required",
+          description: "Please login to reply",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setIsSubmitting(true);
+      
+      try {
+        // Persiapkan data request
+        const replyData = {
+          content: text,
+          // Jika bukan balasan ke post utama, tambahkan parent_id
+          ...(replyingTo.isPost ? {} : { parent_id: parseInt(replyingTo.id) }),
+        };
+        
+        // Kirim request ke API
+        const response = await replyThread(
+          session.accessToken,
+          replyingTo.isPost ? post.id : post.id, // ID post
+          replyData
+        );
+        
+        // Sukses
+        toast({
+          title: "Reply submitted",
+          description: "Your reply has been posted successfully",
+        });
+        
+        // Tutup dialog dan reset state
+        setReplyDialogOpen(false);
+        setReplyingTo(null);
+        
+        // Refresh halaman untuk mendapatkan data terbaru
+        // Alternatif: Update state lokal dengan balasan baru
+        router.refresh();
+        
+      } catch (error) {
+        // Tangani error
+        toast({
+          title: "Failed to submit reply",
+          description: error instanceof Error ? error.message : "An unknown error occurred",
+          variant: "destructive",
+        });
+        console.error("Error submitting reply:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [replyingTo],
-  )
+    [replyingTo, post.id, session, toast, router],
+  );
 
   const handleLike = () => {
     setLiked(!liked)
