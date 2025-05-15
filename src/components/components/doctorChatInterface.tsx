@@ -86,10 +86,10 @@ export default function DoctorChatInterface() {
     }
     
     // Gunakan fungsi sendAiMessage dari chatai.ts
-    const data = await sendAiMessage(session.accessToken, { chat: userMessage });
+    const data = await sendAiMessage(session.accessToken, { message: userMessage });
     
     // Tambahkan respons AI ke messages
-    setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
+    setMessages((prev) => [...prev, { role: "assistant", content: data.reply }])
   } catch (err) {
     console.error("Error sending message:", err)
     setError("Failed to get a response. Please try again.")
@@ -113,7 +113,7 @@ export default function DoctorChatInterface() {
       <div className="bg-blue-50 dark:bg-blue-950/20 p-4 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center">
           <Avatar className="h-10 w-10 mr-3">
-            <AvatarImage src="/placeholder.svg?height=40&width=40&text=MD" alt="Doctor" />
+            <AvatarImage src="/logo.svg" alt="Doctor" />
             <AvatarFallback>MD</AvatarFallback>
           </Avatar>
           <div>
@@ -123,7 +123,7 @@ export default function DoctorChatInterface() {
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4 overflow-y-auto">
         <div className="space-y-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -138,7 +138,7 @@ export default function DoctorChatInterface() {
                       <AvatarImage src="/logo.svg" alt="Doctor" />
                       <AvatarFallback className="text-xs">MD</AvatarFallback>
                     </Avatar>
-                    <span className="text-xs font-medium">Dr. Gemini</span>
+                    <span className="text-xs font-medium">Dr. Meli</span>
                   </div>
                 )}
                 <p className="whitespace-pre-wrap">{message.content}</p>
